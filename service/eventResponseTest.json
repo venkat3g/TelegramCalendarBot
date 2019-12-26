@@ -1,0 +1,74 @@
+{
+    "kind": "calendar#events",
+    "etag": "\"p330dn3e3luuuc0g\"",
+    "summary": "The Halal:Haram Ratio",
+    "updated": "2019-12-17T19:02:32.216Z",
+    "timeZone": "America/New_York",
+    "accessRole": "writer",
+    "defaultReminders": [],
+    "items": [
+        {
+            "kind": "calendar#event",
+            "etag": "\"3152018223026000\"",
+            "id": "_71338dhh8cqj8ba2690jab9k8h1k8b9o61336ba564p3ihi468skaca288",
+            "status": "confirmed",
+            "htmlLink": "starWarsHtmlLink",
+            "created": "2019-12-10T18:50:29.000Z",
+            "updated": "2019-12-10T20:18:31.513Z",
+            "summary": "Star Wars: The Rise of Skywalker (2019)",
+            "description": "description.",
+            "location": "Marcus Crosswoods Cinema 200 Hutchinson Avenue, Columbus, OH 43235",
+            "creator": {
+                "email": "jeven122@gmail.com"
+            },
+            "organizer": {
+                "email": "ii6kcnn0tvdl3john9b49070rg@group.calendar.google.com",
+                "displayName": "The Halal:Haram Ratio",
+                "self": true
+            },
+            "start": {
+                "dateTime": "2019-12-20T23:15:00-05:00"
+            },
+            "end": {
+                "dateTime": "2019-12-21T02:10:00-05:00"
+            },
+            "iCalUID": "8F461C54-B2A5-4DCD-80F3-E129FD29E1BB",
+            "sequence": 0,
+            "reminders": {
+                "useDefault": true
+            }
+        },
+        {
+            "kind": "calendar#event",
+            "etag": "\"3153006692616000\"",
+            "id": "ckr3cp9ncgq32bb1c8q32b9k6osjcbb1ckpj4b9n71j62pb6ckq3cc9o74",
+            "status": "confirmed",
+            "htmlLink": "gameNightHtmlLink",
+            "created": "2019-12-16T13:35:46.000Z",
+            "updated": "2019-12-16T13:35:46.308Z",
+            "summary": "Game Night",
+            "location": "69 E Park St, Westerville, OH 43081, USA",
+            "creator": {
+                "email": "venkat.garapati.15@gmail.com"
+            },
+            "organizer": {
+                "email": "ii6kcnn0tvdl3john9b49070rg@group.calendar.google.com",
+                "displayName": "The Halal:Haram Ratio",
+                "self": true
+            },
+            "start": {
+                "dateTime": "2019-12-28T17:00:00-05:00",
+                "timeZone": "America/New_York"
+            },
+            "end": {
+                "dateTime": "2019-12-28T23:30:00-05:00",
+                "timeZone": "America/New_York"
+            },
+            "iCalUID": "ckr3cp9ncgq32bb1c8q32b9k6osjcbb1ckpj4b9n71j62pb6ckq3cc9o74@google.com",
+            "sequence": 0,
+            "reminders": {
+                "useDefault": true
+            }
+        }
+    ]
+}
