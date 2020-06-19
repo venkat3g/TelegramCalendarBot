@@ -3,6 +3,4 @@ services:
     py-cal-bot:
         build:
             context: ./
-        environment: 
-            BOT_TOKEN: '<TELEGRAME BOT TOKEN>'
-            CALENDAR_ID: '<GOOGLE CALENDAR ID>'
+        env_file: docker.env
