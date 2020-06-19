@@ -1,5 +1,7 @@
 **/__pycache__/
+*.pyc
 .vscode/
 client_secret.json
 token.json
 docker-compose.yml
+docker.env
