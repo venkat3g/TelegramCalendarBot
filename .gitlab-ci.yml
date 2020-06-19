@@ -1,0 +1,27 @@
+stages:
+  - tests
+  - docker
+
+run-tests:
+  image: python:3-slim
+  stage: tests
+  script:
+    - apt-get update && apt-get upgrade && apt-get install -y git
+    - python -m pip install -r requirements.txt
+    - python -m unittest discover -p *Test.py
+  except:
+    - /^wip.*/
+
+docker-build-master:
+  # Build docker image.
+  image: docker:latest
+  stage: docker
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
+    - docker push "$CI_REGISTRY_IMAGE"
+  only:
+    - master
