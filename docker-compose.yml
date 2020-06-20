@@ -4,3 +4,6 @@ services:
         build:
             context: ./
         env_file: docker.env
+        volumes:
+            - ./client_secret.json:/usr/src/app/client_secret.json
+            - ./token.json:/usr/src/app/token.json
