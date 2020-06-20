@@ -76,6 +76,7 @@ class GoogleCalendarService(object):
                                auto_refresh_url=secret["token_uri"],
                                auto_refresh_kwargs=extra,
                                token_updater=self.saveToken,
+                               redirect_uri=secret['redirect_uris'][0],
                                token=token)
 
         return google
