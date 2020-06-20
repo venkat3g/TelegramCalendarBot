@@ -1,7 +1,7 @@
 from service.googleCalendarService import GoogleCalendarService
 from service.userEventStatusService import _START_OF_ATTENDEE_INFO, _HIDDEN_CHAR, UserEventStatusService
 import unittest
-import mock
+from unittest import mock
 import datetime
 import json
 

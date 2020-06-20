@@ -2,7 +2,7 @@ from service.calendarBotHandler import CalendarBotHandler
 from service.userEventStatusService import UserEventStatusService, _HIDDEN_CHAR, _START_OF_ATTENDEE_INFO
 from service.googleCalendarService import _GOING, _NOT, _UNDECIDED
 import unittest
-import mock
+from unittest import mock
 import telegram
 import json
 
