@@ -44,6 +44,20 @@ class CalendarBotHandler(telegram.ext.CommandHandler):
     def _is_command_create_event(self, message, botName):
         return self._is_command(message, botName, "create")
 
+    def get_event_number_from_user_args(self, context):
+        eventNumber = 0
+        if len(context.args) > 0:
+            try:
+                eventNumber = int(context.args[0])
+            except:
+                print("Could not get number from user arguments %s" % (context.arg))
+                eventNumber = 0
+        else:
+            # if user does not specify any number or any arbitrary arguments
+            # we will assume they mean the first event in upcoming 
+            eventNumber = 1
+        return eventNumber
+        
     def _callback(self, update, context):
         try:
             chatId = update.effective_chat.id
@@ -53,15 +67,15 @@ class CalendarBotHandler(telegram.ext.CommandHandler):
                 self._send_events(context, chatId, update)
 
             elif self._is_command_going_to_event(message, botName):
-                eventNumber = int(context.args[0]) if len(context.args) > 0 else 0
+                eventNumber = self.get_event_number_from_user_args(context)
                 self._going_to_event(context, chatId, update, eventNumber)
 
             elif self._is_command_not_going_to_event(message, botName):
-                eventNumber = int(context.args[0]) if len(context.args) > 0 else 0
+                eventNumber = self.get_event_number_from_user_args(context)
                 self._not_going_to_event(context, chatId, update, eventNumber)
 
             elif self._is_command_undecided_about_event(message, botName):
-                eventNumber = int(context.args[0]) if len(context.args) > 0 else 0
+                eventNumber = self.get_event_number_from_user_args(context)
                 self._undecided_about_event(context, chatId, update, eventNumber)
 
             elif self._is_command_get_event_details(message, botName):
@@ -184,8 +198,13 @@ class CalendarBotHandler(telegram.ext.CommandHandler):
     
     def _quick_create_event(self, context, chatId, update, quickCreateString):
         userName = self._get_user_name(update)
-        result = self._calendarService.quickCreateEvent(self._calendar_id, quickCreateString)
-        if "error" in result:
+        result = None
+        if len(quickCreateString) != 0:
+            result = self._calendarService.quickCreateEvent(self._calendar_id, quickCreateString)
+
+        if result == None:
+            pass
+        elif "error" in result:
             context.bot.send_message(chatId, "%s" % (result["error"]))
         else:
             context.bot.send_message(chatId, "%s created %s" % (userName, self._eventSummaryWLinkTelegram(result)), telegram.ParseMode.MARKDOWN)
