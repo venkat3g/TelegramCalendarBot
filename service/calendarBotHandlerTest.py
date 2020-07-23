@@ -74,6 +74,12 @@ class CalendarBotHandlerTest(unittest.TestCase):
         self.calendarBotHandler._callback(update, context)
         context.bot.send_message.assert_called_once_with(chatId, "%s is going to %s" % (fullName, formattedEventSummary), telegram.ParseMode.MARKDOWN)
 
+        command = "/going"
+        context.args = []
+        update.effective_message.text = command
+        self.calendarBotHandler._callback(update, context)
+        context.bot.send_message.assert_called_with(chatId, "%s is going to %s" % (fullName, formattedEventSummary), telegram.ParseMode.MARKDOWN)
+
         command = "/going 2"
         context.args = ['2']
         update.effective_message.text = command
@@ -93,6 +99,11 @@ class CalendarBotHandlerTest(unittest.TestCase):
         formattedEventSummary = "[Star Wars: The Rise of Skywalker (2019)](starWarsHtmlLink)"
         self.calendarBotHandler._callback(update, context)
         context.bot.send_message.assert_called_once_with(chatId, "%s is not going to %s" % (fullName, formattedEventSummary), telegram.ParseMode.MARKDOWN)
+
+        command = "/not"
+        context.args = []
+        self.calendarBotHandler._callback(update, context)
+        context.bot.send_message.assert_called_with(chatId, "%s is not going to %s" % (fullName, formattedEventSummary), telegram.ParseMode.MARKDOWN)
 
         command = "/not 2"
         context.args = ['2']
@@ -114,6 +125,11 @@ class CalendarBotHandlerTest(unittest.TestCase):
         self.calendarBotHandler._callback(update, context)
         context.bot.send_message.assert_called_with(chatId, "%s is undecided about %s" % (fullName, formattedEventSummary), telegram.ParseMode.MARKDOWN)
 
+        command = "/undecided"
+        context.args = []
+        self.calendarBotHandler._callback(update, context)
+        context.bot.send_message.assert_called_with(chatId, "%s is undecided about %s" % (fullName, formattedEventSummary), telegram.ParseMode.MARKDOWN)
+
         command = "/undecided 2"
         context.args = ['2']
         update.effective_message.text = command
@@ -124,19 +140,28 @@ class CalendarBotHandlerTest(unittest.TestCase):
     def test_invalid_number_for_going_not_undecided(self):
         update, context, chatId = self.createMockResourcesForTests()
         self.mockUpcomingEvents()
-        context.args = []
-        update.effective_message.text = "/going"
+        update.effective_message.text = "/going 11"
+        context.args = ['11']
         self.calendarBotHandler._callback(update, context)
 
-        update.effective_message.text = "/not"
+        update.effective_message.text = "/not 123"
+        context.args = ['123']
         self.calendarBotHandler._callback(update, context)
 
-        update.effective_message.text = "/undecided"
+        update.effective_message.text = "/undecided 3"
+        context.args = ['3']
         self.calendarBotHandler._callback(update, context)
-        context.bot.send_message.assert_called_with(chatId, "Invalid Event Number see /upcoming for event numbers", telegram.ParseMode.MARKDOWN)
+
+        context.bot.send_message.assert_called_with(chatId, "Invalid Event Number see /upcoming for event numbers \n\t\t (or leave out number for first event)", telegram.ParseMode.MARKDOWN)
         self.assertEqual(context.bot.send_message.call_count, 3)
         self.assertEqual(context.bot.send_message.args[0], context.bot.send_message.args[1])
         self.assertEqual(context.bot.send_message.args[0], context.bot.send_message.args[2])
+
+        update.effective_message.text = "/details 321"
+        context.args = ['321']
+        self.calendarBotHandler._callback(update, context)
+
+        context.bot.send_message.assert_called_with(chatId, "Valid Event Number Required \n\t\t For Example: `/details 1` \n\t\t (or `/details` for first event)", telegram.ParseMode.MARKDOWN)
 
     def test_details_for_event(self):
         update, context, chatId = self.createMockResourcesForTests()
@@ -151,6 +176,11 @@ class CalendarBotHandlerTest(unittest.TestCase):
             +"\n`Fri. Dec 20, 2019\nFrom 11:15:00PM - 02:10:00AM`\nDescription:\ndescription."
         self.calendarBotHandler._callback(update, context)
         context.bot.send_message.assert_called_once_with(chatId, formattedEventDetails, telegram.ParseMode.MARKDOWN)
+
+        command = "/details"
+        context.args = []
+        self.calendarBotHandler._callback(update, context)
+        context.bot.send_message.assert_called_with(chatId, formattedEventDetails, telegram.ParseMode.MARKDOWN)
 
         command = "/details 2"
         context.args = ['2']

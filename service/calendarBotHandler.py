@@ -44,6 +44,20 @@ class CalendarBotHandler(telegram.ext.CommandHandler):
     def _is_command_create_event(self, message, botName):
         return self._is_command(message, botName, "create")
 
+    def get_event_number_from_user_args(self, context):
+        eventNumber = 0
+        if len(context.args) > 0:
+            try:
+                eventNumber = int(context.args[0])
+            except:
+                print("Could not get number from user arguments %s" % (context.arg))
+                eventNumber = 0
+        else:
+            # if user does not specify any number or any arbitrary arguments
+            # we will assume they mean the first event in upcoming 
+            eventNumber = 1
+        return eventNumber
+        
     def _callback(self, update, context):
         try:
             chatId = update.effective_chat.id
@@ -53,19 +67,19 @@ class CalendarBotHandler(telegram.ext.CommandHandler):
                 self._send_events(context, chatId, update)
 
             elif self._is_command_going_to_event(message, botName):
-                eventNumber = int(context.args[0]) if len(context.args) > 0 else 0
+                eventNumber = self.get_event_number_from_user_args(context)
                 self._going_to_event(context, chatId, update, eventNumber)
 
             elif self._is_command_not_going_to_event(message, botName):
-                eventNumber = int(context.args[0]) if len(context.args) > 0 else 0
+                eventNumber = self.get_event_number_from_user_args(context)
                 self._not_going_to_event(context, chatId, update, eventNumber)
 
             elif self._is_command_undecided_about_event(message, botName):
-                eventNumber = int(context.args[0]) if len(context.args) > 0 else 0
+                eventNumber = self.get_event_number_from_user_args(context)
                 self._undecided_about_event(context, chatId, update, eventNumber)
 
             elif self._is_command_get_event_details(message, botName):
-                eventToSee = int(context.args[0]) if len(context.args) > 0 else 0
+                eventToSee = self.get_event_number_from_user_args(context)
                 self._see_event_details(context, chatId, eventToSee)
 
             elif self._is_command_create_event(message, botName):
@@ -137,7 +151,7 @@ class CalendarBotHandler(telegram.ext.CommandHandler):
 
     def _update_event_on_google_cal(self, context, chatId, update, eventNumber, calendarServiceCallback):
         index = eventNumber - 1
-        message = "Invalid Event Number see /upcoming for event numbers"
+        message = "Invalid Event Number see /upcoming for event numbers \n\t\t (or leave out number for first event)"
         if index >= 0:
             userName = self._get_user_name(update)
             events = self._get_upcoming_events()
@@ -153,7 +167,7 @@ class CalendarBotHandler(telegram.ext.CommandHandler):
     def _see_event_details(self, context, chatId, eventToSee):
         events = self._get_upcoming_events()
         index = eventToSee - 1
-        message = "Valid Event Number Required \n\t\t For Example: `/details 1`"
+        message = "Valid Event Number Required \n\t\t For Example: `/details 1` \n\t\t (or `/details` for first event)"
         if index >= 0 and index < len(events):
             description = lambda event: (event["description"] if "description" in event else "")
             dayAsStringEvent = lambda event: self._startTime(event).strftime("%a. %b %d, %Y")
@@ -184,8 +198,13 @@ class CalendarBotHandler(telegram.ext.CommandHandler):
     
     def _quick_create_event(self, context, chatId, update, quickCreateString):
         userName = self._get_user_name(update)
-        result = self._calendarService.quickCreateEvent(self._calendar_id, quickCreateString)
-        if "error" in result:
+        result = None
+        if len(quickCreateString) != 0:
+            result = self._calendarService.quickCreateEvent(self._calendar_id, quickCreateString)
+
+        if result == None:
+            pass
+        elif "error" in result:
             context.bot.send_message(chatId, "%s" % (result["error"]))
         else:
             context.bot.send_message(chatId, "%s created %s" % (userName, self._eventSummaryWLinkTelegram(result)), telegram.ParseMode.MARKDOWN)
