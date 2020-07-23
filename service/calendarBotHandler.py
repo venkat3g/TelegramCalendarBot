@@ -203,7 +203,10 @@ class CalendarBotHandler(telegram.ext.CommandHandler):
             result = self._calendarService.quickCreateEvent(self._calendar_id, quickCreateString)
 
         if result == None:
-            pass
+            message = "You did not enter anything so an event will not be created.\n" \
+            + "An example of this command: `/create Some Event on Tuesday 1-2pm`\n" \
+            + "Or... `/create Some Event on July 30th 11-4pm`"
+            context.bot.send_message(chatId, message, telegram.ParseMode.MARKDOWN)
         elif "error" in result:
             context.bot.send_message(chatId, "%s" % (result["error"]))
         else:
