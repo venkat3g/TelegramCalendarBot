@@ -277,3 +277,13 @@ class CalendarBotHandlerTest(unittest.TestCase):
 
         expectedMessage = "%s" % error
         context.bot.send_message.assert_called_once_with(chatId, expectedMessage)
+
+        command = '/create'
+        update.effective_message.text = command
+        self.calendarBotHandler._callback(update, context)
+
+        expectedMessage = "You did not enter anything so an event will not be created.\n" \
+            + "An example of this command: `/create Some Event on Tuesday 1-2pm`\n" \
+            + "Or... `/create Some Event on July 30th 11-4pm`"
+
+        context.bot.send_message.assert_called_with(chatId, expectedMessage, telegram.ParseMode.MARKDOWN)
