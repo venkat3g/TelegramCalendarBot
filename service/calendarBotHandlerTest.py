@@ -1,5 +1,6 @@
 from service.calendarBotHandler import CalendarBotHandler
 from service.userEventStatusService import UserEventStatusService, _HIDDEN_CHAR, _START_OF_ATTENDEE_INFO
+from service.eventFormatter import GoogleEventFormatter
 from service.googleCalendarService import _GOING, _NOT, _UNDECIDED
 import unittest
 from unittest import mock
@@ -15,7 +16,7 @@ class CalendarBotHandlerTest(unittest.TestCase):
     def setUp(self, mockGoogleCalendarService):
         self.mockGoogleCalendarService = mockGoogleCalendarService
         userEventStatusService = UserEventStatusService()
-        self.calendarBotHandler = CalendarBotHandler(mockGoogleCalendarService, "calendarId", userEventStatusService)
+        self.calendarBotHandler = CalendarBotHandler(mockGoogleCalendarService, "calendarId", userEventStatusService, GoogleEventFormatter())
 
     def createMockResourcesForTests(self):
         chatId = "chatId"
@@ -54,10 +55,13 @@ class CalendarBotHandlerTest(unittest.TestCase):
         update.effective_message.text = command
         self.mockUpcomingEvents()
         
-        expectedFormattedEvents = "1. [Star Wars: The Rise of Skywalker (2019)](starWarsHtmlLink) - 12/20/2019" \
+        expectedFormattedEvents = "1. [Star Wars: The Rise of Skywalker (2019)](starWarsHtmlLink) - 12/20/2019 to 12/21/2019" \
             + "\n\t\t\t\t\t\t\t11:15:00PM - 02:10:00AM" \
             + "\n2. [Game Night](gameNightHtmlLink) - 12/28/2019" \
-            + "\n\t\t\t\t\t\t\t05:00:00PM - 11:30:00PM"
+            + "\n\t\t\t\t\t\t\t05:00:00PM - 11:30:00PM" \
+            + "\n3. [All Day Multi-Day Event](allDayMultDayEventLink) - 07/31/2020 to 08/02/2020" \
+            + "\n4. [dayout](dayoutLink) - 08/14/2020 to 08/16/2020" \
+            + "\n\t\t\t\t\t\t\t01:00:00PM - 01:00:00PM" 
         self.calendarBotHandler._callback(update, context)
         context.bot.send_message.assert_called_once_with(chatId, "Events coming up:\n%s" % expectedFormattedEvents, telegram.ParseMode.MARKDOWN)
 
@@ -148,8 +152,8 @@ class CalendarBotHandlerTest(unittest.TestCase):
         context.args = ['123']
         self.calendarBotHandler._callback(update, context)
 
-        update.effective_message.text = "/undecided 3"
-        context.args = ['3']
+        update.effective_message.text = "/undecided 9"
+        context.args = ['9']
         self.calendarBotHandler._callback(update, context)
 
         context.bot.send_message.assert_called_with(chatId, "Invalid Event Number see /upcoming for event numbers \n\t\t (or leave out number for first event)", telegram.ParseMode.MARKDOWN)
@@ -173,7 +177,7 @@ class CalendarBotHandlerTest(unittest.TestCase):
         self.mockUpcomingEvents()
         
         formattedEventDetails = "1. [Star Wars: The Rise of Skywalker (2019)](starWarsHtmlLink)"\
-            +"\n`Fri. Dec 20, 2019\nFrom 11:15:00PM - 02:10:00AM`\nDescription:\ndescription."
+            +"\n`Fri. Dec 20, 2019 to Sat. Dec 21, 2019\nFrom 11:15:00PM - 02:10:00AM`\nDescription:\ndescription."
         self.calendarBotHandler._callback(update, context)
         context.bot.send_message.assert_called_once_with(chatId, formattedEventDetails, telegram.ParseMode.MARKDOWN)
 
@@ -186,6 +190,21 @@ class CalendarBotHandlerTest(unittest.TestCase):
         context.args = ['2']
         update.effective_message.text = command
         formattedEventDetails = "2. [Game Night](gameNightHtmlLink)\n`Sat. Dec 28, 2019\nFrom 05:00:00PM - 11:30:00PM`"
+        self.calendarBotHandler._callback(update, context)
+        context.bot.send_message.assert_called_with(chatId, formattedEventDetails, telegram.ParseMode.MARKDOWN)
+
+        command = "/details 3"
+        context.args = ['3']
+        update.effective_message.text = command
+        formattedEventDetails = "3. [All Day Multi-Day Event](allDayMultDayEventLink)\n`Fri. Jul 31, 2020 to Sun. Aug 02, 2020"
+        self.calendarBotHandler._callback(update, context)
+        context.bot.send_message.assert_called_with(chatId, formattedEventDetails, telegram.ParseMode.MARKDOWN)
+
+        command = "/details 4"
+        context.args = ['4']
+        update.effective_message.text = command
+        formattedEventDetails = "4. [dayout](dayoutLink)\n`Fri. Aug 14, 2020 to Sun. Aug 16, 2020\nFrom 01:00:00PM - 01:00:00PM`" \
+            + "\nDescription:\ndescription of multi-day event"
         self.calendarBotHandler._callback(update, context)
         context.bot.send_message.assert_called_with(chatId, formattedEventDetails, telegram.ParseMode.MARKDOWN)
     
@@ -203,7 +222,7 @@ class CalendarBotHandlerTest(unittest.TestCase):
         events[1]["description"] = "%s" % _START_OF_ATTENDEE_INFO + "%s%c%s" % (fullName, _HIDDEN_CHAR, _NOT)
         
         formattedEventDetails = "1. [Star Wars: The Rise of Skywalker (2019)](starWarsHtmlLink)"\
-            + "\n`Fri. Dec 20, 2019\nFrom 11:15:00PM - 02:10:00AM`\nDescription:\ndescription." \
+            + "\n`Fri. Dec 20, 2019 to Sat. Dec 21, 2019\nFrom 11:15:00PM - 02:10:00AM`\nDescription:\ndescription." \
             + "\n\nAttendee Information:" \
             + "\n%s%c%s" % (fullName, _HIDDEN_CHAR, _GOING)
         self.calendarBotHandler._callback(update, context)

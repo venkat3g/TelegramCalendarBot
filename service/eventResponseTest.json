@@ -19,7 +19,7 @@
             "description": "description.",
             "location": "Marcus Crosswoods Cinema 200 Hutchinson Avenue, Columbus, OH 43235",
             "creator": {
-                "email": "jeven122@gmail.com"
+                "email": "creatorEmail"
             },
             "organizer": {
                 "email": "ii6kcnn0tvdl3john9b49070rg@group.calendar.google.com",
@@ -49,7 +49,7 @@
             "summary": "Game Night",
             "location": "69 E Park St, Westerville, OH 43081, USA",
             "creator": {
-                "email": "venkat.garapati.15@gmail.com"
+                "email": "creatorEmail"
             },
             "organizer": {
                 "email": "ii6kcnn0tvdl3john9b49070rg@group.calendar.google.com",
@@ -66,6 +66,70 @@
             },
             "iCalUID": "ckr3cp9ncgq32bb1c8q32b9k6osjcbb1ckpj4b9n71j62pb6ckq3cc9o74@google.com",
             "sequence": 0,
+            "reminders": {
+                "useDefault": true
+            }
+        },
+        {
+            "kind": "calendar#event",
+            "etag": "\"3192325330960000\"",
+            "id": "442hf0bfdsig30efsr5toc28bm",
+            "status": "confirmed",
+            "htmlLink": "allDayMultDayEventLink",
+            "created": "2020-07-31T02:31:05.000Z",
+            "updated": "2020-07-31T02:31:05.480Z",
+            "summary": "All Day Multi-Day Event",
+            "creator": {
+                "email": "creatorEmail",
+                "self": true
+            },
+            "organizer": {
+                "email": "organizerEmail",
+                "self": true
+            },
+            "start": {
+                "date": "2020-07-31"
+            },
+            "end": {
+                "date": "2020-08-02"
+            },
+            "transparency": "transparent",
+            "iCalUID": "442hf0bfdsig30efsr5toc28bm@google.com",
+            "sequence": 0,
+            "reminders": {
+                "useDefault": false
+            }
+        },
+        {
+            "kind": "calendar#event",
+            "etag": "\"3192278711070000\"",
+            "id": "dayoutEventId",
+            "status": "confirmed",
+            "htmlLink": "dayoutLink",
+            "created": "2020-07-30T19:14:07.000Z",
+            "updated": "2020-07-30T20:02:35.535Z",
+            "summary": "dayout",
+            "description": "description of multi-day event",
+            "location": "location",
+            "creator": {
+                "email": "creatorEmail"
+            },
+            "organizer": {
+                "email": "organizerEmail",
+                "displayName": "The Halal:Haram Ratio",
+                "self": true
+            },
+            "start": {
+                "dateTime": "2020-08-14T13:00:00-04:00",
+                "timeZone": "America/New_York"
+            },
+            "end": {
+                "dateTime": "2020-08-16T13:00:00-04:00",
+                "timeZone": "America/New_York"
+            },
+            "transparency": "transparent",
+            "iCalUID": "2c2fc2trgfeshlgomr054esc7j@google.com",
+            "sequence": 2,
             "reminders": {
                 "useDefault": true
             }
