@@ -23,4 +23,6 @@ After the docker-compose file is completed you will need to run `docker-compose 
 
 
 ## Notes
-Please keep in mind that this bot does not currently use the Telegram Bot API Webhook, rather this bot uses the polling method provided by [Updater::start_polling](https://python-telegram-bot.readthedocs.io/en/stable/telegram.ext.updater.html#telegram.ext.Updater.start_polling). This means that bot polls every 2 seconds for new messages sent to it.
+Please keep in mind that this bot does not currently use the Telegram Bot API Webhook, rather this bot uses the polling method provided by [Updater::start_polling](https://python-telegram-bot.readthedocs.io/en/stable/telegram.ext.updater.html#telegram.ext.Updater.start_polling). This means that bot polls every 2 seconds for new messages sent to it. NOTE: Keep in mind when using this Bot that this Bot and current Architecture is not designed to scale for hundreds of users and this application is designed primarily for a single bot to use for a Telegram group chat with friends.
+
+Please note that OAuth2 over HTTP is a terrible idea and is not the preferred way to do this and is more of a development mode methodology for retrieving a refresh_token. Please keep in mind the security risks associated with this approach. Also, storing a refresh token in a json file is not a good approach for storing refresh tokens.
