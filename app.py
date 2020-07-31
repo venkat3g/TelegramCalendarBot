@@ -11,6 +11,7 @@ import telegram.ext
 from flask import Flask, escape, redirect, request
 
 from service.userEventStatusService import UserEventStatusService
+from service.eventFormatter import GoogleEventFormatter
 from service import calendarBotHandler as cbh
 from service import googleCalendarService as gcs
 from support.properties import BOT_TOKEN, CALENDER_ID, LOG_LEVEL, LOG_DATE_FORMAT, LOG_FORMAT, ENABLE_FLASK_SERVER
@@ -21,7 +22,7 @@ app.secret_key = "secretToken"
 def startBot():
     updater = telegram.ext.Updater(token=BOT_TOKEN, use_context=True)
     updater.start_polling(poll_interval=1)
-    updater.dispatcher.add_handler(cbh.CalendarBotHandler(calendarService, CALENDER_ID, userEventStatusService))
+    updater.dispatcher.add_handler(cbh.CalendarBotHandler(calendarService, CALENDER_ID, userEventStatusService, GoogleEventFormatter()))
 
 @app.route("/test")
 def test():
