@@ -13,7 +13,7 @@ from flask import Flask, escape, redirect, request
 from service.userEventStatusService import UserEventStatusService
 from service import calendarBotHandler as cbh
 from service import googleCalendarService as gcs
-from support.properties import BOT_TOKEN, CALENDER_ID, LOG_LEVEL, LOG_DATE_FORMAT, LOG_FORMAT
+from support.properties import BOT_TOKEN, CALENDER_ID, LOG_LEVEL, LOG_DATE_FORMAT, LOG_FORMAT, ENABLE_FLASK_SERVER
 
 app = Flask(__name__)
 app.secret_key = "secretToken"
@@ -57,11 +57,13 @@ if __name__ == '__main__':
     if current_process().name == "MainProcess":
         userEventStatusService = UserEventStatusService()
         calendarService = gcs.GoogleCalendarService(userEventStatusService)
-        startBot()
+        if not ENABLE_FLASK_SERVER:
+            startBot()
 
     configureLogger()
     LOG = logging.getLogger(__name__)
     LOG.info("Started")
     # Specify a hostname and port that are set as a valid redirect URI
     # for your API project in the Google API Console.
-    # app.run('0.0.0.0', 8080, debug=True)
+    if ENABLE_FLASK_SERVER:
+        app.run('0.0.0.0', 8080, debug=True)
