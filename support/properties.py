@@ -9,3 +9,4 @@ CLIENT_SECRET_FILE = 'client_secret.json'
 LOG_LEVEL=INFO
 LOG_DATE_FORMAT='%m-%d-%y %H:%M:%S'
 LOG_FORMAT='[%(asctime)s] p%(process)s:%(thread)d {%(filename)s::%(funcName)s:%(lineno)d} %(levelname)s - %(message)s'
+ENABLE_FLASK_SERVER = os.environ.get('ENABLE_FLASK_SERVER', 'False').upper() == 'TRUE'
