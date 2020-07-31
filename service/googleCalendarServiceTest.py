@@ -21,7 +21,7 @@ class GoogleCalendarServiceTest(unittest.TestCase):
             (self.mockOAuth2Session.get.return_value).ok = True
             (self.mockOAuth2Session.get.return_value).text = eventResponseText.read()
         events = self.googleCalendarService.getCalendarEvents(self.calendarId)
-        self.assertEqual(len(events), 2)
+        self.assertEqual(len(events), 4)
         self.mockOAuth2Session.get.assert_called_once_with('https://www.googleapis.com/calendar/v3/calendars/%s/events' % self.calendarId)
 
     def test_get_upcoming_events(self):
@@ -29,7 +29,7 @@ class GoogleCalendarServiceTest(unittest.TestCase):
             (self.mockOAuth2Session.get.return_value).ok = True
             (self.mockOAuth2Session.get.return_value).text = eventResponseText.read()
         events = self.googleCalendarService.getUpcomingEvents("calendarId")
-        self.assertEqual(len(events), 2)
+        self.assertEqual(len(events), 4)
         self.assertEqual(self.mockOAuth2Session.get.call_args.args[0], 'https://www.googleapis.com/calendar/v3/calendars/%s/events' % self.calendarId)
         self.assertIn("params", self.mockOAuth2Session.get.call_args.kwargs)
         self.assertIn("singleEvents", self.mockOAuth2Session.get.call_args.kwargs['params'])
