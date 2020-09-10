@@ -1,8 +1,10 @@
 import telegram.ext
+import logging
 from datetime import datetime
 from service.eventFormatter import EventFormatter
 from service.userEventStatusService import UserEventStatusService
 
+LOG = logging.getLogger(__name__)
 
 class CalendarBotHandler(telegram.ext.CommandHandler):
 
@@ -90,7 +92,7 @@ class CalendarBotHandler(telegram.ext.CommandHandler):
                 self.unsupportedCommand(context, chatId, message)
         except Exception as e:
             context.bot.send_message(chatId, "An exception occurred while processing command, contact developer(s)")
-            print(e)
+            LOG.error(e)
 
     def _get_quick_create_string(self, message, botName):
         command = "/create"
