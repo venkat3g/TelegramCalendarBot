@@ -38,7 +38,8 @@ class GoogleCalendarService(object):
                 params={
                     "singleEvents" : True,
                     "orderBy" : "startTime",
-                    "timeMin" : datetime.today().strftime("%Y-%m-%dT%H:%M:%S%zZ")
+                    "timeMin" : datetime.today().strftime("%Y-%m-%dT%H:%M:%S%zZ"),
+                    "maxResults": 10
                     })
             if response.ok:
                 content = json.loads(response.text)["items"]
